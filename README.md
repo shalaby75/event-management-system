@@ -20,21 +20,21 @@ This is a backend API for an event management system where users can create even
 
 ## Technologies
 
-- **Node.js** — JavaScript runtime
-- **Express.js** — Web framework
-- **MongoDB** — NoSQL database
-- **Mongoose** — MongoDB object modeling
-- **JWT (jsonwebtoken)** — Authentication tokens
-- **bcryptjs** — Password hashing
-- **dotenv** — Environment variable management
-- **express-validator** — Input validation
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB object modeling
+- **JWT (jsonwebtoken)** - Authentication tokens
+- **bcryptjs** - Password hashing
+- **dotenv** - Environment variable management
+- **express-validator** - Input validation
 
 ## Architecture
 
 The project follows a layered architecture:
 
 ```
-Routes → Controllers → Models → Database
+Routes -> Controllers -> Models -> Database
 ```
 
 - **Routes** define the API endpoints and middleware chain
@@ -46,33 +46,33 @@ Routes → Controllers → Models → Database
 
 ```
 src/
-├── config/
-│   └── db.js              # MongoDB connection
-├── controllers/
-│   ├── authController.js  # Register & login logic
-│   ├── eventController.js # Event CRUD logic
-│   ├── categoryController.js # Category logic
-│   └── registrationController.js # Registration logic
-├── models/
-│   ├── User.js            # User schema
-│   ├── Event.js           # Event schema
-│   ├── Category.js        # Category schema
-│   └── Registration.js    # Registration schema
-├── routes/
-│   ├── authRoutes.js      # /api/auth/*
-│   ├── eventRoutes.js     # /api/events/*
-│   ├── categoryRoutes.js  # /api/categories/*
-│   └── registrationRoutes.js # /api/events/:eventId/register
-├── middlewares/
-│   ├── authMiddleware.js  # JWT verification
-│   ├── errorMiddleware.js # Centralized error handling
-│   └── validationMiddleware.js # Validation result checker
-├── validators/
-│   ├── authValidator.js   # Auth input rules
-│   ├── eventValidator.js  # Event input rules
-│   └── categoryValidator.js # Category input rules
-├── app.js                 # Express app setup
-└── server.js              # Server entry point
+|-- config/
+|   `-- db.js              # MongoDB connection
+|-- controllers/
+|   |-- authController.js  # Register & login logic
+|   |-- eventController.js # Event CRUD logic
+|   |-- categoryController.js # Category logic
+|   `-- registrationController.js # Registration logic
+|-- models/
+|   |-- User.js            # User schema
+|   |-- Event.js           # Event schema
+|   |-- Category.js        # Category schema
+|   `-- Registration.js    # Registration schema
+|-- routes/
+|   |-- authRoutes.js      # /api/auth/*
+|   |-- eventRoutes.js     # /api/events/*
+|   |-- categoryRoutes.js  # /api/categories/*
+|   `-- registrationRoutes.js # /api/events/:eventId/register
+|-- middlewares/
+|   |-- authMiddleware.js  # JWT verification
+|   |-- errorMiddleware.js # Centralized error handling
+|   `-- validationMiddleware.js # Validation result checker
+|-- validators/
+|   |-- authValidator.js   # Auth input rules
+|   |-- eventValidator.js  # Event input rules
+|   `-- categoryValidator.js # Category input rules
+|-- app.js                 # Express app setup
+`-- server.js              # Server entry point
 ```
 
 ## Installation
