@@ -1,10 +1,10 @@
 # Event Management System
 
-A RESTful API for managing events, categories, and user registrations built with Node.js, Express, and MongoDB.
+A full-stack application for managing events, categories, and user registrations built with Node.js, Express, MongoDB, and React.
 
 ## Description
 
-This is a backend API for an event management system where users can create events, categorize them, and register for events with capacity limits. The system uses JWT for authentication and bcrypt for password hashing.
+This is a full-stack event management system where users can create events, categorize them, and register for events with capacity limits. The backend uses JWT for authentication and bcrypt for password hashing. The frontend is built with React and Vite.
 
 ## Features
 
@@ -17,8 +17,11 @@ This is a backend API for an event management system where users can create even
 - Centralized error handling
 - Password hashing with bcryptjs
 - Protected routes with JWT middleware
+- Responsive React frontend
 
 ## Technologies
+
+### Backend
 
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web framework
@@ -28,6 +31,14 @@ This is a backend API for an event management system where users can create even
 - **bcryptjs** - Password hashing
 - **dotenv** - Environment variable management
 - **express-validator** - Input validation
+- **cors** - Cross-Origin Resource Sharing
+
+### Frontend
+
+- **React 18** - UI library
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **Axios** - HTTP client
 
 ## Architecture
 
@@ -245,6 +256,47 @@ A Postman collection is included in the project root:
   ]
 }
 ```
+
+## Frontend
+
+The frontend is a React + Vite application located in the `frontend/` folder.
+
+### Frontend Technologies
+
+- **React 18** - UI library
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **Axios** - HTTP client
+
+### Frontend Environment Variables
+
+Create a `frontend/.env` file:
+
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+See `frontend/.env.example` for reference.
+
+### Running the Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`.
+
+### Frontend Features
+
+- Login and Register pages
+- Events listing with search and filter
+- Event details with registration
+- Create and edit events
+- My Events page (events created by logged-in user)
+- My Registrations page (events registered by logged-in user)
+- Responsive design for desktop, tablet, and mobile
 
 ## License
 
