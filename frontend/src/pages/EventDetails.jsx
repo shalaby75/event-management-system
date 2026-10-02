@@ -81,7 +81,10 @@ function EventDetails() {
 
   const isCreator = user && event.createdBy && user._id === event.createdBy._id
   const myRegistration = user && registrations.find((reg) => reg.user && reg.user._id === user._id)
-  const isFull = registrations.length >= event.capacity
+  // Available seats are calculated dynamically: capacity - current registrations.
+  // The stored capacity value itself never changes.
+  const availableSeats = Math.max(event.capacity - registrations.length, 0)
+  const isFull = availableSeats === 0
 
   return (
     <div className="container">
@@ -92,6 +95,7 @@ function EventDetails() {
           <p><strong>Date:</strong> {new Date(event.date).toLocaleString()}</p>
           <p><strong>Location:</strong> {event.location}</p>
           <p><strong>Capacity:</strong> {event.capacity}</p>
+          <p><strong>Available Seats:</strong> {availableSeats}</p>
           {event.category && <p><strong>Category:</strong> {event.category.name}</p>}
           {event.createdBy && <p><strong>Created by:</strong> {event.createdBy.name}</p>}
         </div>
