@@ -55,6 +55,47 @@ const registerForEvent = async (req, res, next) => {
   }
 };
 
+// @desc    Cancel own registration for an event
+// @route   DELETE /api/events/:eventId/register
+// @access  Private
+const cancelRegistration = async (req, res, next) => {
+  try {
+    const { eventId } = req.params;
+    const userId = req.user._id;
+
+    // 1. Check if event exists
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: 'Event not found',
+      });
+    }
+
+    // 2. Find the registration owned by the authenticated user
+    const registration = await Registration.findOne({
+      user: userId,
+      event: eventId,
+    });
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration not found',
+      });
+    }
+
+    // 3. Delete it (query above guarantees it belongs to the requester)
+    await registration.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: 'Registration cancelled successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get all registrations for an event
 // @route   GET /api/events/:eventId/registrations
 // @access  Public
@@ -86,4 +127,4 @@ const getEventRegistrations = async (req, res, next) => {
   }
 };
 
-module.exports = { registerForEvent, getEventRegistrations };
+module.exports = { registerForEvent, cancelRegistration, getEventRegistrations };

@@ -1,6 +1,9 @@
 const Event = require('../models/Event');
 const Category = require('../models/Category');
 
+// Escape special regex characters so user input is treated as plain text
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // @desc    Create a new event
 // @route   POST /api/events
 // @access  Private
@@ -51,9 +54,9 @@ const getEvents = async (req, res, next) => {
     const { location, category, search } = req.query;
     const query = {};
 
-    // Filter by location (case-insensitive partial match)
+    // Filter by location (case-insensitive prefix match)
     if (location) {
-      query.location = { $regex: location, $options: 'i' };
+      query.location = { $regex: `^${escapeRegex(location)}`, $options: 'i' };
     }
 
     // Filter by category ID
@@ -61,12 +64,9 @@ const getEvents = async (req, res, next) => {
       query.category = category;
     }
 
-    // Search in title and description
+    // Search event titles (case-insensitive prefix match)
     if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-      ];
+      query.title = { $regex: `^${escapeRegex(search)}`, $options: 'i' };
     }
 
     const events = await Event.find(query)

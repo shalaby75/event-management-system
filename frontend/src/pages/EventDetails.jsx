@@ -8,9 +8,11 @@ function EventDetails() {
   const navigate = useNavigate()
   const { isAuthenticated, user } = useAuth()
   const [event, setEvent] = useState(null)
+  const [registrations, setRegistrations] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [registering, setRegistering] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
   const [registerMessage, setRegisterMessage] = useState('')
 
   useEffect(() => {
@@ -21,8 +23,12 @@ function EventDetails() {
     setLoading(true)
     setError('')
     try {
-      const response = await api.get(`/events/${id}`)
-      setEvent(response.data.data)
+      const [eventResponse, registrationsResponse] = await Promise.all([
+        api.get(`/events/${id}`),
+        api.get(`/events/${id}/registrations`),
+      ])
+      setEvent(eventResponse.data.data)
+      setRegistrations(registrationsResponse.data.data)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load event')
     } finally {
@@ -44,6 +50,21 @@ function EventDetails() {
     }
   }
 
+  const handleCancelRegistration = async () => {
+    if (!window.confirm('Are you sure you want to cancel your registration?')) return
+    setCancelling(true)
+    setRegisterMessage('')
+    try {
+      await api.delete(`/events/${id}/register`)
+      setRegisterMessage('Successfully cancelled your registration.')
+      fetchEvent()
+    } catch (err) {
+      setRegisterMessage(err.response?.data?.message || 'Failed to cancel registration')
+    } finally {
+      setCancelling(false)
+    }
+  }
+
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this event?')) return
     try {
@@ -59,6 +80,8 @@ function EventDetails() {
   if (!event) return <div className="empty-state">Event not found.</div>
 
   const isCreator = user && event.createdBy && user._id === event.createdBy._id
+  const myRegistration = user && registrations.find((reg) => reg.user && reg.user._id === user._id)
+  const isFull = registrations.length >= event.capacity
 
   return (
     <div className="container">
@@ -81,13 +104,30 @@ function EventDetails() {
 
         <div className="event-actions">
           {isAuthenticated && !isCreator && (
-            <button
-              onClick={handleRegister}
-              disabled={registering}
-              className="btn btn-primary"
-            >
-              {registering ? 'Registering...' : 'Register for Event'}
-            </button>
+            myRegistration ? (
+              <>
+                <span className="alert alert-success">Already Registered</span>
+                <button
+                  onClick={handleCancelRegistration}
+                  disabled={cancelling}
+                  className="btn btn-danger"
+                >
+                  {cancelling ? 'Cancelling...' : 'Cancel Registration'}
+                </button>
+              </>
+            ) : isFull ? (
+              <button className="btn btn-primary" disabled>
+                Event Full
+              </button>
+            ) : (
+              <button
+                onClick={handleRegister}
+                disabled={registering}
+                className="btn btn-primary"
+              >
+                {registering ? 'Registering...' : 'Register for Event'}
+              </button>
+            )
           )}
           {isCreator && (
             <>

@@ -8,6 +8,8 @@ function MyRegistrations() {
   const [registrations, setRegistrations] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [cancellingId, setCancellingId] = useState(null)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     fetchMyRegistrations()
@@ -51,12 +53,29 @@ function MyRegistrations() {
     }
   }
 
+  const handleCancel = async (reg) => {
+    if (!window.confirm(`Cancel your registration for "${reg.event.title}"?`)) return
+    setCancellingId(reg._id)
+    setMessage('')
+    setError('')
+    try {
+      await api.delete(`/events/${reg.event._id}/register`)
+      setRegistrations((prev) => prev.filter((r) => r._id !== reg._id))
+      setMessage(`Registration for "${reg.event.title}" cancelled successfully.`)
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to cancel registration')
+    } finally {
+      setCancellingId(null)
+    }
+  }
+
   if (loading) return <div className="loading">Loading your registrations...</div>
-  if (error) return <div className="alert alert-error">{error}</div>
 
   return (
     <div className="container">
       <h1>My Registrations</h1>
+      {message && <div className="alert alert-success">{message}</div>}
+      {error && <div className="alert alert-error">{error}</div>}
       {registrations.length === 0 ? (
         <p className="empty-state">You haven't registered for any events yet.</p>
       ) : (
@@ -74,6 +93,13 @@ function MyRegistrations() {
                 Registered: {new Date(reg.registeredAt).toLocaleDateString()}
               </p>
               <Link to={`/events/${reg.event._id}`} className="btn btn-primary">View Event</Link>
+              <button
+                onClick={() => handleCancel(reg)}
+                disabled={cancellingId === reg._id}
+                className="btn btn-danger"
+              >
+                {cancellingId === reg._id ? 'Cancelling...' : 'Cancel Registration'}
+              </button>
             </div>
           ))}
         </div>
