@@ -74,4 +74,11 @@ const eventIdValidation = [
     .withMessage('Invalid event ID'),
 ];
 
-module.exports = { createEventValidation, updateEventValidation, eventIdValidation };
+// Validates the :eventId param used by registration routes
+const registrationEventIdValidation = [
+  param('eventId')
+    .custom((value) => mongoose.Types.ObjectId.isValid(value))
+    .withMessage('Invalid event ID'),
+];
+
+module.exports = { createEventValidation, updateEventValidation, eventIdValidation, registrationEventIdValidation };

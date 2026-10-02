@@ -235,6 +235,23 @@
           }
         },
         {
+          "name": "Cancel Registration",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events/REPLACE_WITH_EVENT_ID/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", "REPLACE_WITH_EVENT_ID", "register"]
+            }
+          }
+        },
+        {
           "name": "Get Event Registrations",
           "request": {
             "method": "GET",
